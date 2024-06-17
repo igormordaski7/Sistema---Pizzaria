@@ -8,7 +8,25 @@ public class Sistema {
 
     }
 
-    private static void verificarOpcao() {
+    private static void verificarOpcao(int op) {
+
+        switch (op) {
+            case 1:
+                
+                break;
+
+            case 2:
+
+                break;
+
+            case 3:
+
+                break;
+        
+            default:
+                break;
+        }
+
 
     }
 
