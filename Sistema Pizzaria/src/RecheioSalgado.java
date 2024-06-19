@@ -38,4 +38,5 @@ public class RecheioSalgado extends Recheio {
     public static Recheio r28 = new RecheioSalgado("rúcula", 3.50f, 2);
     public static Recheio r29 = new RecheioSalgado("tomate-seco", 6.00f, 3);
     public static Recheio r30 = new RecheioSalgado("pepino", 2.00f, 2);
+    public static Recheio r31 = new RecheioSalgado("alcaparras", 6.00f, 3);
 }

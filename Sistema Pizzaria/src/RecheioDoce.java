@@ -28,4 +28,7 @@ public class RecheioDoce extends Recheio {
     public static Recheio r18 = new RecheioDoce("amendoim granulado", 2.00f, 2);
     public static Recheio r19 = new RecheioDoce("ovo maltine", 4.00f, 3);
     public static Recheio r20 = new RecheioDoce("suspiro", 2.60f, 1);
+    public static Recheio r21 = new RecheioDoce("ameixa", 3.60f, 1);
+    
+
 }
