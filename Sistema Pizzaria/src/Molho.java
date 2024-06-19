@@ -11,7 +11,7 @@ public class Molho extends Ingredientes {
         return "Molho";
     }
 
-    public boolean isEssencial() {
+    public boolean essencial() {
         return essencial;
     }
 

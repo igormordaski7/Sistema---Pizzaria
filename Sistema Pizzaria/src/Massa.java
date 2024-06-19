@@ -11,7 +11,7 @@ public class Massa extends Ingredientes {
         return "Massa";
     }
 
-    public boolean isEssencial() {
+    public boolean essencial() {
         return essencial;
     }
 
