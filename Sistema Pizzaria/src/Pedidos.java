@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Pedidos {
     private int numeroPedido;
@@ -8,18 +9,29 @@ public class Pedidos {
     private float precoTotal;
     private float tempoPedido;
 
-    public Pedidos(List<Bebidas> bebidas, List<Pizza> pizzas) {
+    public Pedidos() {
         this.numeroPedido = gerarNumeroPedido();
-        this.bebidas = bebidas;
-        this.pizzas = pizzas;
-        calcularPrecoTotal();
-        calcularTempoPedido();
+        this.bebidas = new ArrayList<>();
+        this.pizzas = new ArrayList<>();
+        this.precoTotal = 0;
+        this.tempoPedido = 0;
     }
 
     private int gerarNumeroPedido() {
         // Gerar número de pedido aleatório de 3 dígitos
         Random random = new Random();
         return random.nextInt(900) + 100; // Números de 100 a 999
+    }
+
+    public void adicionarPizza(Pizza pizza) {
+        pizzas.add(pizza);
+        calcularPrecoTotal();
+        calcularTempoPedido();
+    }
+
+    public void adicionarBebida(Bebidas bebida) {
+        bebidas.add(bebida);
+        calcularPrecoTotal();
     }
 
     private void calcularPrecoTotal() {
@@ -65,16 +77,5 @@ public class Pedidos {
 
     public float getTempoPedido() {
         return tempoPedido;
-    }
-
-    public void setBebidas(List<Bebidas> bebidas) {
-        this.bebidas = bebidas;
-        calcularPrecoTotal();
-    }
-
-    public void setPizzas(List<Pizza> pizzas) {
-        this.pizzas = pizzas;
-        calcularPrecoTotal();
-        calcularTempoPedido();
     }
 }
