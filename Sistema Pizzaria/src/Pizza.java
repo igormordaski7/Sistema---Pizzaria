@@ -8,12 +8,14 @@ public class Pizza {
     private List<Ingredientes> recheios;
     private float preco;
     private float tempPreparo;
+    private int tamanho; // Novo atributo para tamanho da pizza
 
     public Pizza(String nome, Ingredientes massa, Ingredientes molho) {
         this.nome = nome;
         this.massa = massa;
         this.molho = molho;
         this.recheios = new ArrayList<>();
+        this.tamanho = -1; // Valor inicial padrão para tamanho
         calcular();
     }
 
@@ -46,39 +48,50 @@ public class Pizza {
         return tempPreparo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public int getTamanho() {
+        return tamanho;
     }
 
-    public void setMassa(Ingredientes massa) {
-        this.massa = massa;
-        calcular();
-    }
-
-    public void setMolho(Ingredientes molho) {
-        this.molho = molho;
-        calcular();
-    }
-
-    public void setRecheios(List<Ingredientes> recheios) {
-        this.recheios = recheios;
+    public void setTamanho(int tamanho) {
+        this.tamanho = tamanho;
         calcular();
     }
 
     private void calcular() {
-        // Calcular preço total da pizza
-        preco = massa.getPreco() + molho.getPreco();
+        float multiplicador;
+        switch (tamanho) {
+            case 1:
+                multiplicador = 1.0f;
+                break;
+            case 2:
+                multiplicador = 1.2f;
+                break;
+            case 3:
+                multiplicador = 1.5f;
+                break;
+            case 4:
+                multiplicador = 1.7f;
+                break;
+            case 5:
+                multiplicador = 2.0f;
+                break;
+            default:
+                throw new IllegalArgumentException("Tamanho inválido: " + tamanho);
+        }
+
+        preco = multiplicador * (massa.getPreco() + molho.getPreco());
         for (Ingredientes recheio : recheios) {
-            preco += recheio.getPreco();
+            preco += multiplicador * recheio.getPreco();
         }
 
         // Calcular tempo total de preparo da pizza
-        tempPreparo = massa.getTempPreparo() + molho.getTempPreparo();
+        tempPreparo = multiplicador * (massa.getTempPreparo() + molho.getTempPreparo());
         for (Ingredientes recheio : recheios) {
-            tempPreparo += recheio.getTempPreparo();
+            tempPreparo += multiplicador * recheio.getTempPreparo();
         }
     }
 
+    // Método estático para criar e configurar várias pizzas
     public static void Pizzas() {
 
         Pizza p1 = new Pizza("Pizza de Calabresa Acebolada", Massa.m1, Molho.m1);
@@ -96,7 +109,6 @@ public class Pizza {
         p3.addRecheio(RecheioSalgado.r12);
         p3.addRecheio(RecheioSalgado.r18);
 
-        
         Pizza p4 = new Pizza("Estelar", Massa.m1, Molho.m1);
         p4.addRecheio(RecheioSalgado.r1);
         p4.addRecheio(RecheioSalgado.r2);
@@ -129,7 +141,6 @@ public class Pizza {
         p9.addRecheio(RecheioSalgado.r21);
         p9.addRecheio(RecheioSalgado.r23);
 
-
         Pizza p10 = new Pizza("Da Casa", Massa.m1, Molho.m1);
         p10.addRecheio(RecheioSalgado.r1);
         p10.addRecheio(RecheioSalgado.r3);
@@ -152,11 +163,11 @@ public class Pizza {
         p12.addRecheio(RecheioSalgado.r6);
         p12.addRecheio(RecheioSalgado.r18);
 
-        Pizza p13 = new Pizza("Banana Canela", Massa.m1, Molho.m6);
+        Pizza p13 = new Pizza("Banana Canela", Massa.m1, Molho.m0);
         p13.addRecheio(RecheioDoce.r5);
         p13.addRecheio(RecheioDoce.r9);
 
-        Pizza p14 = new Pizza("Califórnia", Massa.m1, Molho.m6);
+        Pizza p14 = new Pizza("Califórnia", Massa.m1, Molho.m0);
         p14.addRecheio(RecheioDoce.r7);
         p14.addRecheio(RecheioDoce.r11);
         p14.addRecheio(RecheioDoce.r12);
@@ -173,18 +184,18 @@ public class Pizza {
         Pizza p16 = new Pizza("Morango com Chocolate", Massa.m1, Molho.m3);
         p16.addRecheio(RecheioDoce.r1);
         p16.addRecheio(RecheioDoce.r4);
-        
-        Pizza p17 = new Pizza("Vegana Doce", Massa.m3, Molho.m6);
+
+        Pizza p17 = new Pizza("Vegana Doce", Massa.m3, Molho.m0);
         p17.addRecheio(RecheioDoce.r4);
         p17.addRecheio(RecheioDoce.r4);
         p17.addRecheio(RecheioDoce.r11);
         p17.addRecheio(RecheioDoce.r9);
 
-        Pizza p18 = new Pizza("Ovo Maltine", Massa.m1, Molho.m6);
+        Pizza p18 = new Pizza("Ovo Maltine", Massa.m1, Molho.m0);
         p18.addRecheio(RecheioDoce.r4);
         p18.addRecheio(RecheioDoce.r19);
 
-        Pizza p19 = new Pizza("Floresta Negra", Massa.m1, Molho.m6);
+        Pizza p19 = new Pizza("Floresta Negra", Massa.m1, Molho.m0);
         p19.addRecheio(RecheioDoce.r2);
         p19.addRecheio(RecheioDoce.r12);
         p19.addRecheio(RecheioDoce.r8);
@@ -196,10 +207,6 @@ public class Pizza {
         p20.addRecheio(RecheioSalgado.r11);
         p20.addRecheio(RecheioDoce.r7);
 
-
-        
-        
-
-
     }
+
 }
