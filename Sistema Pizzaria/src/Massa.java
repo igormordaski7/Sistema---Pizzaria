@@ -11,11 +11,11 @@ public class Massa extends Ingredientes {
         return "Massa";
     }
 
-    public boolean isEssencial() {
+    public boolean essencial() {
         return essencial;
     }
 
-    public static Massa m1 = new Massa("Tradicional", 10.00f, 5);
-    public static Massa m2 = new Massa("Doce", 12.00f, 6);
-    public static Massa m3 = new Massa("Vegana", 15.00f, 10);
+    public static Massa m1 = new Massa("Tradicional", 10.00f, 15);
+    public static Massa m2 = new Massa("Doce", 12.00f, 20);
+    public static Massa m3 = new Massa("Vegana", 15.00f, 25);
 }
