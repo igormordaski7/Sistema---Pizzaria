@@ -77,7 +77,7 @@ public class Sistema {
                 // ListarPedidos();
                 break;
             case 4:
-                // VerificarHistoricoPedidos();
+                listarHistoricoPedidos();
                 break;
             case 5:
                 usuarioLogado = null;
@@ -215,6 +215,9 @@ public class Sistema {
                     String confirmacaoPagamento = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
                     if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
                         System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
+
+                        usuarioLogado.adicionarPedidoHistorico(pedido);
+
                         // Caso afirmativo, gerar recibo
                         String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
                         gerarRecibo(pedido, caminhoArquivo);
@@ -225,6 +228,25 @@ public class Sistema {
                     }
                     continuar = false; // Sair do loop e voltar ao menu principal
                     break;
+            }
+        }
+    }
+
+    public static void listarHistoricoPedidos() {
+        if (usuarioLogado == null) {
+            System.out.println("Nenhum usuário logado.");
+            return;
+        }
+    
+        List<Pedidos> historico = usuarioLogado.getHistoricoPedidos();
+        if (historico.isEmpty()) {
+            System.out.println("Nenhum pedido realizado ainda.");
+        } else {
+            System.out.println("--- Histórico de Pedidos ---");
+            for (Pedidos pedido : historico) {
+                System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
+                // Aqui você pode exibir informações adicionais do pedido se desejar
+                System.out.println("============================");
             }
         }
     }

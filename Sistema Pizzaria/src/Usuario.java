@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
     
     private String nome;
@@ -6,6 +9,7 @@ public class Usuario {
     private String email;
     private String telefone;
     private String senha;
+    private List<Pedidos> historicoPedidos;
 
     public Usuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
         this.nome = nome;
@@ -14,6 +18,8 @@ public class Usuario {
         this.email = email;
         this.telefone = telefone;
         this.senha = senha;
+        this.historicoPedidos = new ArrayList<>();
+        
     }
 
     public String getNome() {
@@ -71,5 +77,13 @@ public class Usuario {
                "Email: " + email + "\n" +
                "Telefone: " + telefone + "\n" +
                "Senha: " + senha;
+    }
+
+     public List<Pedidos> getHistoricoPedidos() {
+        return historicoPedidos;
+    }
+
+    public void adicionarPedidoHistorico(Pedidos pedido) {
+        historicoPedidos.add(pedido);
     }
 }
