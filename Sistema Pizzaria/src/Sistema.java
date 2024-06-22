@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class Sistema {
 
@@ -28,7 +29,7 @@ public class Sistema {
     private static void verificarOpcao(int op) {
         switch (op) {
             case 1:
-                RealizarPedido();
+                gerarPedido();
                 break;
             case 2:
                 ExibirCardapio();
@@ -47,14 +48,87 @@ public class Sistema {
         }
     }
 
-    private static void RealizarPedido() {
-        System.out.println("\n### Cadastro de Nova Pizza ###");
-        String nome = Console.lerString("Digite o nome da pizza: ");
-        float preco = Console.lerFloat("Digite o preço da pizza: ");
+        public static void gerarPedido() {
+        
+            Pedidos pedido = new Pedidos();
+            boolean continuar = true;
+    
+            while (continuar) {
+                System.out.println("Menu:");
+                System.out.println("1. Adicionar Pizza");
+                System.out.println("2. Adicionar Bebida");
+                System.out.println("3. Finalizar Pedido");
+                int escolha = Console.lerInt("Escolha uma opção: ");
 
-        // Simulação de cadastro
-        System.out.println("Pizza cadastrada com sucesso!");
-        proximoIdPizza++;
+                switch (escolha) {
+                    case 1:
+                    int pizzaEscolha = Console.lerInt("\nEscolha uma pizza pelo número (1-20): ");
+                    int tamanhoPizza = Console.lerInt("\nEscolha o tamanho da pizza (1-5): ");
+                    boolean pizzaAdicionada = Metodos.selecionarPizza(pizzaEscolha, tamanhoPizza, pedido);
+
+                    if (pizzaAdicionada) {
+                        System.out.println("\nPizza adicionada ao pedido!");
+                    } else {
+                        System.out.println("\nOpção inválida ou tamanho de pizza inválido. A pizza não foi adicionada.");
+                    }
+                    break;
+
+                    case 2: 
+                    int bebidaEscolha = Console.lerInt("\nEscolha uma bebida pelo número (1-7): ");
+                    Bebidas bebidaAdicionada = Metodos.selecionarBebida(bebidaEscolha, pedido);
+                    if (bebidaAdicionada != null) {
+                    System.out.println("\nBebida adicionada ao pedido!");
+                    } else {
+                    System.out.println("\nEscolha de bebida inválida. A bebida não foi adicionada.");
+                    }
+                    break;
+
+                    case 3:
+                    System.out.println("\n======= Dados do Pedido =======");
+                    System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
+
+                    // Mostrar bebidas, se houver
+                    List<Bebidas> bebidas = pedido.getBebidas();
+                    if (!bebidas.isEmpty()) {
+                        System.out.println("\nBebidas:");
+                        for (Bebidas bebida : bebidas) {
+                            System.out.println("- " + bebida.getNome() + ": R$ " + String.format("%.2f", bebida.getPreco()));
+                        }
+                    }
+
+                    // Mostrar pizzas, se houver
+                    List<Pizza> pizzas = pedido.getPizzas();
+                    if (!pizzas.isEmpty()) {
+                        System.out.println("\nPizzas:");
+                        for (Pizza pizza : pizzas) {
+                            System.out.println("- " + pizza.getNome() + ": R$ " + String.format("%.2f", pizza.getPreco()));
+                            System.out.println("  Ingredientes:");
+                            System.out.println("    Massa: " + pizza.getMassa().getNome());
+                            System.out.println("    Molho: " + pizza.getMolho().getNome());
+                            for (Ingredientes recheio : pizza.getRecheios()) {
+                                System.out.println("    Recheio: " + recheio.getNome());
+                            }
+                            System.out.println("  Tamanho: " + pizza.getTamanho());
+                            System.out.println("  Tempo de Preparo: " + pizza.getTempPreparo() + " minutos");
+                        }
+                    }
+
+                    // Mostrar preço total do pedido
+                    System.out.println("\n===============================");
+                    System.out.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
+                    System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
+                    System.out.println("===============================");
+
+                    String confirmacao = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
+                if ("sim".equalsIgnoreCase(confirmacao.trim())) {
+                    // Caso afirmativo, gerar recibo
+                    String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
+                    gerarRecibo(pedido, caminhoArquivo);
+                }
+                break;
+
+                }
+    }
     }
 
     private static void ExibirCardapio() {
@@ -78,7 +152,7 @@ public class Sistema {
 
     public static void gerarRecibo(Pedidos pedido, String caminhoArquivo) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo))) {
-            writer.write("Recibo do Pedido\n");
+            writer.write("\nRecibo do Pedido\n");
             writer.write("================\n");
             writer.write("Número do Pedido: " + pedido.getNumeroPedido() + "\n");
             writer.write("Bebidas:\n");
@@ -105,5 +179,9 @@ public class Sistema {
         } catch (IOException e) {
             System.err.println("Erro ao gerar recibo: " + e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        gerarPedido();
     }
 }
