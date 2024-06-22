@@ -53,7 +53,7 @@ public class Sistema {
                 cadastrarUsuario();
                 break;
             case 3:
-                // ExibirCardapio();
+                Metodos.exibirCardapio();
                 break;
             case 4:
                 System.out.println("Saindo do sistema...");
@@ -71,7 +71,7 @@ public class Sistema {
                 gerarPedido();
                 break;
             case 2:
-                // ExibirCardapio();
+                Metodos.exibirCardapio();
                 break;
             case 3:
                 // ListarPedidos();
@@ -90,7 +90,7 @@ public class Sistema {
     }
 
     private static void realizarLogin() {
-  
+
         System.out.print("\nDigite seu CPF: ");
         String cpf = Console.lerString();
         System.out.print("Digite sua senha: ");
@@ -138,14 +138,16 @@ public class Sistema {
             return;
         }
 
+        Metodos.exibirCardapio();
         Pedidos pedido = new Pedidos();
         boolean continuar = true;
 
         while (continuar) {
-            System.out.println("\n--- Menu - Pedidos ---");
+            System.out.println("\nMenu:");
             System.out.println("1. Adicionar Pizza");
             System.out.println("2. Adicionar Bebida");
-            System.out.println("3. Finalizar Pedido");
+            System.out.println("3. Customizar Pizza");
+            System.out.println("4. Finalizar Pedido");
             int escolha = Console.lerInt("Escolha uma opção: ");
 
             switch (escolha) {
@@ -177,6 +179,9 @@ public class Sistema {
                     break;
 
                 case 3:
+                    Metodos.customPizza(pedido);
+                    break;
+                case 4:
                     System.out.println("\n======= Dados do Pedido =======");
                     System.out.println("\nNúmero do Pedido: " + pedido.getNumeroPedido());
 
@@ -185,7 +190,8 @@ public class Sistema {
                     if (!bebidas.isEmpty()) {
                         System.out.println("\nBebidas:");
                         for (Bebidas bebida : bebidas) {
-                            System.out.println("- " + bebida.getNome() + ": R$ " + String.format("%.2f", bebida.getPreco()));
+                            System.out.println(
+                                    "- " + bebida.getNome() + ": R$ " + String.format("%.2f", bebida.getPreco()));
                         }
                     }
 
@@ -194,7 +200,8 @@ public class Sistema {
                     if (!pizzas.isEmpty()) {
                         System.out.println("\nPizzas:");
                         for (Pizza pizza : pizzas) {
-                            System.out.println("- " + pizza.getNome() + ": R$ " + String.format("%.2f", pizza.getPreco()));
+                            System.out.println(
+                                    "- " + pizza.getNome() + ": R$ " + String.format("%.2f", pizza.getPreco()));
                             System.out.println("  Ingredientes:");
                             System.out.println("    Massa: " + pizza.getMassa().getNome());
                             System.out.println("    Molho: " + pizza.getMolho().getNome());
@@ -212,21 +219,15 @@ public class Sistema {
                     System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
                     System.out.println("===============================");
 
-                    String confirmacaoPagamento = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
+                    String confirmacaoPagamento = Console
+                            .lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
                     if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
                         System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
-
-                        usuarioLogado.adicionarPedidoHistorico(pedido);
-
                         // Caso afirmativo, gerar recibo
                         String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
                         gerarRecibo(pedido, caminhoArquivo);
-
-                    } else {
-                        System.out.println("Pagamento não confirmado. Pedido cancelado.");
-                        pedido = null; // Cancelar o pedido
+                        executarSistema();
                     }
-                    continuar = false; // Sair do loop e voltar ao menu principal
                     break;
             }
         }
@@ -237,7 +238,7 @@ public class Sistema {
             System.out.println("Nenhum usuário logado.");
             return;
         }
-    
+
         List<Pedidos> historico = usuarioLogado.getHistoricoPedidos();
         if (historico.isEmpty()) {
             System.out.println("Nenhum pedido realizado ainda.");
