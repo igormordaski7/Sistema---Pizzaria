@@ -570,7 +570,7 @@ public class Metodos {
     }
 
     public static void exibirDetalhesPizza(int numPizzas) {
-        // TODO Auto-generated method stub
+
         throw new UnsupportedOperationException("Unimplemented method 'exibirDetalhesPizza'");
     }
 
