@@ -1,32 +1,71 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sistema {
 
-    private static int proximoIdPizza = 1;
-    private static int proximoIdPedido = 1;
+    private static List<Usuario> usuariosCadastrados = new ArrayList<>();
+    private static Usuario usuarioLogado = null;
 
     public static void executarSistema() {
         boolean executando = true;
 
         while (executando) {
-            exibirMenu();
+            if (usuarioLogado == null) {
+                exibirMenuInicial();
+            } else {
+                exibirMenuLogado();
+            }
             int opcao = Console.lerInt("Digite a opção desejada: ");
-            verificarOpcao(opcao);
+            if (usuarioLogado == null) {
+                verificarOpcaoInicial(opcao);
+            } else {
+                verificarOpcaoLogado(opcao);
+            }
         }
     }
 
-    private static void exibirMenu() {
-        System.out.println("\n### Sistema de Pizzaria ###");
-        System.out.println("1. Realizar Pedidos");
-        System.out.println("2. Exibir Cardápio");
-        System.out.println("3. Listar pedidos realizados");
+    private static void exibirMenuInicial() {
+        System.out.println("\n--- Sistema de Pizzaria ---");
+        System.out.println("1. Realizar Login");
+        System.out.println("2. Cadastrar Usuário");
+        System.out.println("3. Exibir Cardápio");
         System.out.println("4. Sair");
     }
 
-    private static void verificarOpcao(int op) {
+    private static void exibirMenuLogado() {
+        System.out.println("\n--- Sistema de Pizzaria ---");
+        System.out.println("1. Realizar Pedidos");
+        System.out.println("2. Exibir Cardápio");
+        System.out.println("3. Listar Pedidos Realizados");
+        System.out.println("4. Verificar Histórico de Pedidos");
+        System.out.println("5. Sair");
+    }
+
+    private static void verificarOpcaoInicial(int op) {
+        switch (op) {
+            case 1:
+                realizarLogin();
+                break;
+            case 2:
+                cadastrarUsuario();
+                break;
+            case 3:
+                // ExibirCardapio();
+                break;
+            case 4:
+                System.out.println("Saindo do sistema...");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+                break;
+        }
+    }
+
+    private static void verificarOpcaoLogado(int op) {
         switch (op) {
             case 1:
                 gerarPedido();
@@ -38,30 +77,79 @@ public class Sistema {
                 // ListarPedidos();
                 break;
             case 4:
-                System.out.println("Saindo do sistema...");
-                System.exit(0);
+                // VerificarHistoricoPedidos();
                 break;
-
+            case 5:
+                usuarioLogado = null;
+                System.out.println("Logout realizado com sucesso.");
+                break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
                 break;
         }
     }
 
-        public static void gerarPedido() {
-        
-            Pedidos pedido = new Pedidos();
-            boolean continuar = true;
-    
-            while (continuar) {
-                System.out.println("Menu:");
-                System.out.println("1. Adicionar Pizza");
-                System.out.println("2. Adicionar Bebida");
-                System.out.println("3. Finalizar Pedido");
-                int escolha = Console.lerInt("Escolha uma opção: ");
+    private static void realizarLogin() {
+  
+        System.out.print("\nDigite seu CPF: ");
+        String cpf = Console.lerString();
+        System.out.print("Digite sua senha: ");
+        String senha = Console.lerString();
 
-                switch (escolha) {
-                    case 1:
+        Usuario usuarioEncontrado = null;
+        for (Usuario usuario : usuariosCadastrados) {
+            if (usuario.getCpf().equals(cpf) && usuario.getSenha().equals(senha)) {
+                usuarioEncontrado = usuario;
+                break;
+            }
+        }
+
+        if (usuarioEncontrado != null) {
+            usuarioLogado = usuarioEncontrado;
+            System.out.println("\nLogin realizado com sucesso.");
+        } else {
+            System.out.println("\nCPF ou senha incorretos. Tente novamente.");
+        }
+    }
+
+    private static void cadastrarUsuario() {
+        System.out.println("\n--- Cadastro de Usuário ---");
+        System.out.print("Nome: ");
+        String nome = Console.lerString();
+        System.out.print("CPF: ");
+        String cpf = Console.lerString();
+        System.out.print("Endereço: ");
+        String endereco = Console.lerString();
+        System.out.print("E-mail: ");
+        String email = Console.lerString();
+        System.out.print("Telefone: ");
+        String telefone = Console.lerString();
+        System.out.print("Senha: ");
+        String senha = Console.lerString();
+
+        Usuario novoUsuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
+        usuariosCadastrados.add(novoUsuario);
+        System.out.println("\nUsuário cadastrado com sucesso!");
+    }
+
+    public static void gerarPedido() {
+        if (usuarioLogado == null) {
+            System.out.println("Você precisa estar logado para realizar pedidos.");
+            return;
+        }
+
+        Pedidos pedido = new Pedidos();
+        boolean continuar = true;
+
+        while (continuar) {
+            System.out.println("\n--- Menu - Pedidos ---");
+            System.out.println("1. Adicionar Pizza");
+            System.out.println("2. Adicionar Bebida");
+            System.out.println("3. Finalizar Pedido");
+            int escolha = Console.lerInt("Escolha uma opção: ");
+
+            switch (escolha) {
+                case 1:
                     int pizzaEscolha = Console.lerInt("\nEscolha uma pizza pelo número (1-20): ");
                     int tamanhoPizza = Console.lerInt("\nEscolha o tamanho da pizza (1-5): ");
                     boolean pizzaAdicionada = Metodos.selecionarPizza(pizzaEscolha, tamanhoPizza, pedido);
@@ -71,23 +159,24 @@ public class Sistema {
                             System.out.println("\nPizza adicionada ao pedido com sucesso!");
                         }
                     } catch (Exception e) {
-                            System.out.println("Não foi possível adicionar a pizza no pedido!" + e.getMessage());
-                    } break;
+                        System.out.println("Não foi possível adicionar a pizza no pedido!" + e.getMessage());
+                    }
+                    break;
 
-
-                    case 2: 
+                case 2:
                     int bebidaEscolha = Console.lerInt("\nEscolha uma bebida pelo número (1-15): ");
                     Bebidas bebidaAdicionada = Metodos.selecionarBebida(bebidaEscolha, pedido);
-                    
+
                     try {
                         if (bebidaAdicionada != null) {
-                        System.out.println("\nBebida adicionada ao pedido!");
-                    
-                    }} catch (Exception e) {
+                            System.out.println("\nBebida adicionada ao pedido!");
+                        }
+                    } catch (Exception e) {
                         System.out.println("\nEscolha de bebida inválida. A bebida não foi adicionada.");
-                    } break;
+                    }
+                    break;
 
-                    case 3:
+                case 3:
                     System.out.println("\n======= Dados do Pedido =======");
                     System.out.println("\nNúmero do Pedido: " + pedido.getNumeroPedido());
 
@@ -124,23 +213,27 @@ public class Sistema {
                     System.out.println("===============================");
 
                     String confirmacaoPagamento = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
-                if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
-                    System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
-                    // Caso afirmativo, gerar recibo
-                    String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
-                    gerarRecibo(pedido, caminhoArquivo);
-                }
-                break;
+                    if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
+                        System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
+                        // Caso afirmativo, gerar recibo
+                        String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
+                        gerarRecibo(pedido, caminhoArquivo);
 
-                }
-    }
+                    } else {
+                        System.out.println("Pagamento não confirmado. Pedido cancelado.");
+                        pedido = null; // Cancelar o pedido
+                    }
+                    continuar = false; // Sair do loop e voltar ao menu principal
+                    break;
+            }
+        }
     }
 
     public static void gerarRecibo(Pedidos pedido, String caminhoArquivo) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo))) {
             writer.write("\nRecibo do Pedido\n");
             writer.write("================\n");
-            writer.write("Número do Pedido: " + pedido.getNumeroPedido() + "\n");
+            writer.write("Numero do Pedido: " + pedido.getNumeroPedido() + "\n");
             writer.write("Bebidas:\n");
             for (Bebidas bebida : pedido.getBebidas()) {
                 writer.write("- " + bebida.getNome() + ": R$ " + String.format("%.2f", bebida.getPreco()) + "\n");
@@ -158,7 +251,7 @@ public class Sistema {
                 writer.write("  Tempo de Preparo: " + pizza.getTempPreparo() + " minutos\n");
             }
             writer.write("================\n");
-            writer.write("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()) + "\n");
+            writer.write("Preco Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()) + "\n");
             writer.write("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos\n");
             writer.write("================\n");
             writer.write("Obrigado por sua compra!");
@@ -168,6 +261,6 @@ public class Sistema {
     }
 
     public static void main(String[] args) {
-        gerarPedido();
+        executarSistema();
     }
 }
