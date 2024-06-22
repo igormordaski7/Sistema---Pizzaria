@@ -32,10 +32,10 @@ public class Sistema {
                 gerarPedido();
                 break;
             case 2:
-                ExibirCardapio();
+                // ExibirCardapio();
                 break;
             case 3:
-                ListarPedidos();
+                // ListarPedidos();
                 break;
             case 4:
                 System.out.println("Saindo do sistema...");
@@ -66,26 +66,30 @@ public class Sistema {
                     int tamanhoPizza = Console.lerInt("\nEscolha o tamanho da pizza (1-5): ");
                     boolean pizzaAdicionada = Metodos.selecionarPizza(pizzaEscolha, tamanhoPizza, pedido);
 
-                    if (pizzaAdicionada) {
-                        System.out.println("\nPizza adicionada ao pedido!");
-                    } else {
-                        System.out.println("\nOpção inválida ou tamanho de pizza inválido. A pizza não foi adicionada.");
-                    }
-                    break;
+                    try {
+                        if (pizzaAdicionada) {
+                            System.out.println("\nPizza adicionada ao pedido com sucesso!");
+                        }
+                    } catch (Exception e) {
+                            System.out.println("Não foi possível adicionar a pizza no pedido!" + e.getMessage());
+                    } break;
+
 
                     case 2: 
                     int bebidaEscolha = Console.lerInt("\nEscolha uma bebida pelo número (1-15): ");
                     Bebidas bebidaAdicionada = Metodos.selecionarBebida(bebidaEscolha, pedido);
-                    if (bebidaAdicionada != null) {
-                    System.out.println("\nBebida adicionada ao pedido!");
-                    } else {
-                    System.out.println("\nEscolha de bebida inválida. A bebida não foi adicionada.");
-                    }
-                    break;
+                    
+                    try {
+                        if (bebidaAdicionada != null) {
+                        System.out.println("\nBebida adicionada ao pedido!");
+                    
+                    }} catch (Exception e) {
+                        System.out.println("\nEscolha de bebida inválida. A bebida não foi adicionada.");
+                    } break;
 
                     case 3:
                     System.out.println("\n======= Dados do Pedido =======");
-                    System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
+                    System.out.println("\nNúmero do Pedido: " + pedido.getNumeroPedido());
 
                     // Mostrar bebidas, se houver
                     List<Bebidas> bebidas = pedido.getBebidas();
@@ -119,8 +123,9 @@ public class Sistema {
                     System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
                     System.out.println("===============================");
 
-                    String confirmacao = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
-                if ("sim".equalsIgnoreCase(confirmacao.trim())) {
+                    String confirmacaoPagamento = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
+                if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
+                    System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
                     // Caso afirmativo, gerar recibo
                     String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
                     gerarRecibo(pedido, caminhoArquivo);
@@ -129,25 +134,6 @@ public class Sistema {
 
                 }
     }
-    }
-
-    private static void ExibirCardapio() {
-        System.out.println("\n### Listagem de Pizzas ###");
-        System.out.println("Aqui deveria listar todas as pizzas cadastradas.");
-
-        // Simulação de listagem
-        System.out.println("Nenhuma pizza cadastrada.");
-    }
-
-    private static void ListarPedidos() {
-        System.out.println("\n### Realização de Pedido ###");
-
-        // Simulação de realização de pedido
-        System.out.println("Pedido realizado com sucesso!");
-        proximoIdPedido++;
-
-        // Simulação de listagem
-        System.out.println("Nenhum pedido realizado.");
     }
 
     public static void gerarRecibo(Pedidos pedido, String caminhoArquivo) {
