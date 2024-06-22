@@ -6,7 +6,7 @@ public class Console {
     private static Scanner leitor = new Scanner(System.in);
 
     public static int lerInt() {
-        String msg = "Digite um valor 'int': ";
+        String msg = "";
         return lerInt(msg);
     }
 
@@ -21,7 +21,7 @@ public class Console {
                 break;
 
             } catch (InputMismatchException exception) {
-                System.out.print("\nValor inválido. Digite um valor 'int': ");
+                System.out.print("");
 
             } finally {
 
@@ -36,7 +36,7 @@ public class Console {
 
     public static float lerFloat() {
 
-        String msg = "Digite um valor 'float': ";
+        String msg = "";
         return lerFloat(msg);
     }
 
@@ -51,7 +51,7 @@ public class Console {
                 break;
 
             } catch (InputMismatchException exception) {
-                System.out.print("\nValor inválido. Digite um valor 'float': ");
+                System.out.print("");
 
             } finally {
 
@@ -66,7 +66,7 @@ public class Console {
     }
 
     public static String lerString() {
-        String msg = "Digite uma 'String': ";
+        String msg = "";
         return lerString(msg);
     }
 
