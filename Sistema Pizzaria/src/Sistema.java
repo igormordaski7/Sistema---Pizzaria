@@ -74,7 +74,7 @@ public class Sistema {
                     break;
 
                     case 2: 
-                    int bebidaEscolha = Console.lerInt("\nEscolha uma bebida pelo número (1-7): ");
+                    int bebidaEscolha = Console.lerInt("\nEscolha uma bebida pelo número (1-15): ");
                     Bebidas bebidaAdicionada = Metodos.selecionarBebida(bebidaEscolha, pedido);
                     if (bebidaAdicionada != null) {
                     System.out.println("\nBebida adicionada ao pedido!");
