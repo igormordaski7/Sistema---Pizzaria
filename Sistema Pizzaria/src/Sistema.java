@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Sistema {
 
     private static int proximoIdPizza = 1;
@@ -33,9 +37,9 @@ public class Sistema {
                 ListarPedidos();
                 break;
             case 4:
-            System.out.println("Saindo do sistema...");
-            System.exit(0);
-            break;
+                System.out.println("Saindo do sistema...");
+                System.exit(0);
+                break;
 
             default:
                 System.out.println("Opção inválida. Tente novamente.");
@@ -64,12 +68,42 @@ public class Sistema {
     private static void ListarPedidos() {
         System.out.println("\n### Realização de Pedido ###");
 
-
         // Simulação de realização de pedido
         System.out.println("Pedido realizado com sucesso!");
         proximoIdPedido++;
 
         // Simulação de listagem
         System.out.println("Nenhum pedido realizado.");
+    }
+
+    public static void gerarRecibo(Pedidos pedido, String caminhoArquivo) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo))) {
+            writer.write("Recibo do Pedido\n");
+            writer.write("================\n");
+            writer.write("Número do Pedido: " + pedido.getNumeroPedido() + "\n");
+            writer.write("Bebidas:\n");
+            for (Bebidas bebida : pedido.getBebidas()) {
+                writer.write("- " + bebida.getNome() + ": R$ " + String.format("%.2f", bebida.getPreco()) + "\n");
+            }
+            writer.write("Pizzas:\n");
+            for (Pizza pizza : pedido.getPizzas()) {
+                writer.write("- " + pizza.getNome() + ": R$ " + String.format("%.2f", pizza.getPreco()) + "\n");
+                writer.write("  Ingredientes:\n");
+                writer.write("    Massa: " + pizza.getMassa().getNome() + "\n");
+                writer.write("    Molho: " + pizza.getMolho().getNome() + "\n");
+                for (Ingredientes recheio : pizza.getRecheios()) {
+                    writer.write("    Recheio: " + recheio.getNome() + "\n");
+                }
+                writer.write("  Tamanho: " + pizza.getTamanho() + "\n");
+                writer.write("  Tempo de Preparo: " + pizza.getTempPreparo() + " minutos\n");
+            }
+            writer.write("================\n");
+            writer.write("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()) + "\n");
+            writer.write("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos\n");
+            writer.write("================\n");
+            writer.write("Obrigado por sua compra!");
+        } catch (IOException e) {
+            System.err.println("Erro ao gerar recibo: " + e.getMessage());
+        }
     }
 }
