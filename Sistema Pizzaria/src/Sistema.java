@@ -39,6 +39,13 @@ public class Sistema {
     }
 
     private static void exibirMenuLogado() {
+
+        if (usuarioLogado == null) {
+            System.out.println("Usuário não está logado. Redirecionando para o menu inicial...");
+            exibirMenuInicial();
+            return;
+        }
+
         System.out.println("\n--- Sistema de Pizzaria ---");
         System.out.println("1. Realizar Pedidos");
         System.out.println("2. Exibir Cardápio");
@@ -110,7 +117,8 @@ public class Sistema {
         if (usuarioEncontrado != null) {
             usuarioLogado = usuarioEncontrado;
             System.out.println("\nLogin realizado com sucesso.");
-            usuarioLogado.carregarHistoricoPedidos();
+            usuarioLogado.carregarHistoricoPedidos(cpf);
+            exibirMenuLogado();
         } else {
             System.out.println("\nCPF ou senha incorretos. Tente novamente.");
         }
@@ -247,15 +255,19 @@ public class Sistema {
                             System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
                             // Caso afirmativo, gerar recibo
                             usuarioLogado.adicionarPedido(pedido);
-                             usuarioLogado.listarHistoricoPedidos();
+                            usuarioLogado.listarHistoricoPedidos();
 
                             String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
                             gerarRecibo(pedido, caminhoArquivo);
-                            executarSistema();
+
+                            String caminhoHistorico = "historico_pedidos_" + usuarioLogado.getCpf() + ".txt";
+                            usuarioLogado.salvarHistoricoPedidos(caminhoHistorico);
+
                         }       
                     } catch (Exception e) {
                         System.out.println("Pagamento não autorizado. Pedido cancelado!");
                     }
+                    continuar = false; // Sair do loop após finalizar pedido
                     break;
             }
         }
