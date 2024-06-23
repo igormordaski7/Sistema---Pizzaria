@@ -4,20 +4,30 @@ import java.util.List;
 
 public class GerenciarUsuario {
 
-    public static void salvarUsuarios(List<Usuario> usuarios) {
-        String nomeArquivo = "usuarios.txt";
+    private List<Usuario> usuariosCadastrados;
 
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
-            oos.writeObject(usuarios);
-            System.out.println("Lista de usuários salva com sucesso em " + nomeArquivo);
-        } catch (IOException e) {
-            System.out.println("Erro ao salvar lista de usuários: " + e.getMessage());
-        }
+    public GerenciarUsuario() {
+        this.usuariosCadastrados = carregarUsuariosDoArquivo();
     }
 
-    public static List<Usuario> carregarUsuarios() {
-        String nomeArquivo = "usuarios.txt";
+    public Usuario realizarLogin(String cpf, String senha) {
+        for (Usuario usuario : usuariosCadastrados) {
+            if (usuario.getCpf().equals(cpf) && usuario.getSenha().equals(senha)) {
+                return usuario;
+            }
+        }
+        return null; // Retorna null se não encontrar o usuário
+    }
+
+    public void cadastrarUsuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
+        Usuario novoUsuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
+        usuariosCadastrados.add(novoUsuario);
+        salvarUsuarios();
+    }
+
+    private List<Usuario> carregarUsuariosDoArquivo() {
         List<Usuario> usuarios = new ArrayList<>();
+        String nomeArquivo = "usuarios.txt";
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nomeArquivo))) {
             usuarios = (List<Usuario>) ois.readObject();
@@ -27,5 +37,20 @@ public class GerenciarUsuario {
         }
 
         return usuarios;
+    }
+
+    public void salvarUsuarios() {
+        String nomeArquivo = "usuarios.txt";
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+            oos.writeObject(usuariosCadastrados);
+            System.out.println("Lista de usuários salva com sucesso em " + nomeArquivo);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar lista de usuários: " + e.getMessage());
+        }
+    }
+
+    public List<Usuario> getUsuariosCadastrados() {
+        return usuariosCadastrados;
     }
 }

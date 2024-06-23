@@ -1,16 +1,14 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Sistema {
 
-    private static List<Usuario> usuariosCadastrados = new ArrayList<>();
+    private static GerenciarUsuario gerenciarUsuario = new GerenciarUsuario();
     private static Usuario usuarioLogado = null;
 
     public static void executarSistema() {
-        carregarUsuariosDoArquivo();
 
         boolean executando = true;
 
@@ -27,10 +25,11 @@ public class Sistema {
                 verificarOpcaoLogado(opcao);
             }
         }
-        salvarUsuariosParaArquivo();
+        gerenciarUsuario.salvarUsuarios();
     }
 
     private static void exibirMenuInicial() {
+        
         System.out.println("\n--- Sistema de Pizzaria ---");
         System.out.println("1. Realizar Login");
         System.out.println("2. Cadastrar Usuário");
@@ -39,12 +38,6 @@ public class Sistema {
     }
 
     private static void exibirMenuLogado() {
-
-        if (usuarioLogado == null) {
-            System.out.println("Usuário não está logado. Redirecionando para o menu inicial...");
-            exibirMenuInicial();
-            return;
-        }
 
         System.out.println("\n--- Sistema de Pizzaria ---");
         System.out.println("1. Realizar Pedidos");
@@ -106,19 +99,11 @@ public class Sistema {
         System.out.print("Digite sua senha: ");
         String senha = Console.lerString();
 
-        Usuario usuarioEncontrado = null;
-        for (Usuario usuario : usuariosCadastrados) {
-            if (usuario.getCpf().equals(cpf) && usuario.getSenha().equals(senha)) {
-                usuarioEncontrado = usuario;
-                break;
-            }
-        }
-
+        Usuario usuarioEncontrado = gerenciarUsuario.realizarLogin(cpf, senha);
         if (usuarioEncontrado != null) {
             usuarioLogado = usuarioEncontrado;
             System.out.println("\nLogin realizado com sucesso.");
             usuarioLogado.carregarHistoricoPedidos(cpf);
-            exibirMenuLogado();
         } else {
             System.out.println("\nCPF ou senha incorretos. Tente novamente.");
         }
@@ -139,26 +124,7 @@ public class Sistema {
         System.out.print("Senha: ");
         String senha = Console.lerString();
 
-        if (usuariosCadastrados == null) {
-            usuariosCadastrados = new ArrayList<>();
-        }
-
-        Usuario novoUsuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
-        usuariosCadastrados.add(novoUsuario);
-
-        GerenciarUsuario.salvarUsuarios(usuariosCadastrados);
-        System.out.println("\nUsuário cadastrado com sucesso!");
-    }
-
-    private static void carregarUsuariosDoArquivo() {
-        usuariosCadastrados = GerenciarUsuario.carregarUsuarios(); // Carrega os usuários ao iniciar o sistema
-        if (usuariosCadastrados == null) {
-            usuariosCadastrados = new ArrayList<>();
-        }
-    }
-
-    private static void salvarUsuariosParaArquivo() {
-        GerenciarUsuario.salvarUsuarios(usuariosCadastrados); // Salva os usuários ao finalizar o sistema
+        gerenciarUsuario.cadastrarUsuario(nome, cpf, endereco, email, telefone, senha);
     }
 
     public static void gerarPedido() {
