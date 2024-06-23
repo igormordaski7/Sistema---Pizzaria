@@ -6,8 +6,8 @@ public class Pedidos {
     private int numeroPedido;
     private List<Bebidas> bebidas;
     private List<Pizza> pizzas;
-    private float precoTotal;
-    private float tempoPedido;
+    private double precoTotal;
+    private double tempoPedido;
 
     public Pedidos() {
         this.numeroPedido = gerarNumeroPedido();
@@ -63,6 +63,10 @@ public class Pedidos {
         return numeroPedido;
     }
 
+    public void setNumeroPedido(int numeroPedido) {
+        this.numeroPedido = numeroPedido;
+    }
+
     public List<Bebidas> getBebidas() {
         return bebidas;
     }
@@ -71,13 +75,19 @@ public class Pedidos {
         return pizzas;
     }
 
-    public float getPrecoTotal() {
+    public double getPrecoTotal() {
         return precoTotal;
     }
 
-    public float getTempoPedido() {
+    public void setPrecoTotal(double precoTotal) {
+        this.precoTotal = precoTotal;
+    }
+
+    public double getTempoPedido() {
         return tempoPedido;
     }
 
-    
+    public void setTempoPedido(double tempoPedido) {
+        this.tempoPedido = tempoPedido;
+    }
 }

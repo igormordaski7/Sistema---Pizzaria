@@ -1,42 +1,31 @@
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GerenciarUsuario {
 
-    private static Map<String, Usuario> usuarios = new HashMap<>();
-    private static Map<String, List<Pedidos>> historicoPedidos = new HashMap<>();
+    public static void salvarUsuarios(List<Usuario> usuarios) {
+        String nomeArquivo = "usuarios.txt";
 
-    public static boolean cadastrarUsuario(String nome, String cpf, String endereco, String email, String telefone,
-            String senha) {
-
-        if (usuarios.containsKey(cpf)) {
-            return false; // Usuário já cadastrado
-        }
-
-        Usuario usuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
-        usuarios.put(cpf, usuario);
-        historicoPedidos.put(cpf, new ArrayList<>());
-        return true;
-    }
-
-    public static Usuario login(String cpf, String senha) {
-        Usuario usuario = usuarios.get(cpf);
-        if (usuario != null && usuario.getSenha().equals(senha)) {
-            return usuario;
-        }
-        return null;
-    }
-
-    public static void adicionarPedidoAoHistorico(String cpf, Pedidos pedido) {
-        List<Pedidos> pedidos = historicoPedidos.get(cpf);
-        if (pedidos != null) {
-            pedidos.add(pedido);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+            oos.writeObject(usuarios);
+            System.out.println("Lista de usuários salva com sucesso em " + nomeArquivo);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar lista de usuários: " + e.getMessage());
         }
     }
 
-    public static List<Pedidos> getHistoricoPedidos(String cpf) {
-        return historicoPedidos.getOrDefault(cpf, new ArrayList<>());
+    public static List<Usuario> carregarUsuarios() {
+        String nomeArquivo = "usuarios.txt";
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nomeArquivo))) {
+            usuarios = (List<Usuario>) ois.readObject();
+            System.out.println("Lista de usuários carregada de " + nomeArquivo);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar lista de usuários: " + e.getMessage());
+        }
+
+        return usuarios;
     }
 }
