@@ -1,42 +1,56 @@
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GerenciarUsuario {
 
-    private static Map<String, Usuario> usuarios = new HashMap<>();
-    private static Map<String, List<Pedidos>> historicoPedidos = new HashMap<>();
+    private List<Usuario> usuariosCadastrados;
 
-    public static boolean cadastrarUsuario(String nome, String cpf, String endereco, String email, String telefone,
-            String senha) {
-
-        if (usuarios.containsKey(cpf)) {
-            return false; // Usuário já cadastrado
-        }
-
-        Usuario usuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
-        usuarios.put(cpf, usuario);
-        historicoPedidos.put(cpf, new ArrayList<>());
-        return true;
+    public GerenciarUsuario() {
+        this.usuariosCadastrados = carregarUsuariosDoArquivo();
     }
 
-    public static Usuario login(String cpf, String senha) {
-        Usuario usuario = usuarios.get(cpf);
-        if (usuario != null && usuario.getSenha().equals(senha)) {
-            return usuario;
+    public Usuario realizarLogin(String cpf, String senha) {
+        for (Usuario usuario : usuariosCadastrados) {
+            if (usuario.getCpf().equals(cpf) && usuario.getSenha().equals(senha)) {
+                return usuario;
+            }
         }
-        return null;
+        return null; // Retorna null se não encontrar o usuário
     }
 
-    public static void adicionarPedidoAoHistorico(String cpf, Pedidos pedido) {
-        List<Pedidos> pedidos = historicoPedidos.get(cpf);
-        if (pedidos != null) {
-            pedidos.add(pedido);
+    public void cadastrarUsuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
+        Usuario novoUsuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
+        usuariosCadastrados.add(novoUsuario);
+        salvarUsuarios();
+    }
+
+    private List<Usuario> carregarUsuariosDoArquivo() {
+        List<Usuario> usuarios = new ArrayList<>();
+        String nomeArquivo = "usuarios.txt";
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nomeArquivo))) {
+            usuarios = (List<Usuario>) ois.readObject();
+            System.out.println("Lista de usuários carregada de " + nomeArquivo);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar lista de usuários: " + e.getMessage());
+        }
+
+        return usuarios;
+    }
+
+    public void salvarUsuarios() {
+        String nomeArquivo = "usuarios.txt";
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+            oos.writeObject(usuariosCadastrados);
+            System.out.println("Lista de usuários salva com sucesso em " + nomeArquivo);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar lista de usuários: " + e.getMessage());
         }
     }
 
-    public static List<Pedidos> getHistoricoPedidos(String cpf) {
-        return historicoPedidos.getOrDefault(cpf, new ArrayList<>());
+    public List<Usuario> getUsuariosCadastrados() {
+        return usuariosCadastrados;
     }
 }

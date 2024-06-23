@@ -1,15 +1,15 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Sistema {
 
-    private static List<Usuario> usuariosCadastrados = new ArrayList<>();
+    private static GerenciarUsuario gerenciarUsuario = new GerenciarUsuario();
     private static Usuario usuarioLogado = null;
 
     public static void executarSistema() {
+
         boolean executando = true;
 
         while (executando) {
@@ -25,9 +25,11 @@ public class Sistema {
                 verificarOpcaoLogado(opcao);
             }
         }
+        gerenciarUsuario.salvarUsuarios();
     }
 
     private static void exibirMenuInicial() {
+        
         System.out.println("\n--- Sistema de Pizzaria ---");
         System.out.println("1. Realizar Login");
         System.out.println("2. Cadastrar Usuário");
@@ -36,6 +38,7 @@ public class Sistema {
     }
 
     private static void exibirMenuLogado() {
+
         System.out.println("\n--- Sistema de Pizzaria ---");
         System.out.println("1. Realizar Pedidos");
         System.out.println("2. Exibir Cardápio");
@@ -56,11 +59,11 @@ public class Sistema {
                 Metodos.exibirCardapio();
                 break;
             case 4:
-                System.out.println("Saindo do sistema...");
+                System.out.println("\nSaindo do sistema...");
                 System.exit(0);
                 break;
             default:
-                System.out.println("Opção inválida. Tente novamente.");
+                System.out.println("\nOpção inválida. Tente novamente.");
                 break;
         }
     }
@@ -74,17 +77,17 @@ public class Sistema {
                 Metodos.exibirCardapio();
                 break;
             case 3:
-                // ListarPedidos();
+                listarPedidosRealizados();
                 break;
             case 4:
                 listarHistoricoPedidos();
                 break;
             case 5:
                 usuarioLogado = null;
-                System.out.println("Logout realizado com sucesso.");
+                System.out.println("\nLogout realizado com sucesso.");
                 break;
             default:
-                System.out.println("Opção inválida. Tente novamente.");
+                System.out.println("\nOpção inválida. Tente novamente.");
                 break;
         }
     }
@@ -96,17 +99,11 @@ public class Sistema {
         System.out.print("Digite sua senha: ");
         String senha = Console.lerString();
 
-        Usuario usuarioEncontrado = null;
-        for (Usuario usuario : usuariosCadastrados) {
-            if (usuario.getCpf().equals(cpf) && usuario.getSenha().equals(senha)) {
-                usuarioEncontrado = usuario;
-                break;
-            }
-        }
-
+        Usuario usuarioEncontrado = gerenciarUsuario.realizarLogin(cpf, senha);
         if (usuarioEncontrado != null) {
             usuarioLogado = usuarioEncontrado;
             System.out.println("\nLogin realizado com sucesso.");
+            usuarioLogado.carregarHistoricoPedidos(cpf);
         } else {
             System.out.println("\nCPF ou senha incorretos. Tente novamente.");
         }
@@ -127,14 +124,12 @@ public class Sistema {
         System.out.print("Senha: ");
         String senha = Console.lerString();
 
-        Usuario novoUsuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
-        usuariosCadastrados.add(novoUsuario);
-        System.out.println("\nUsuário cadastrado com sucesso!");
+        gerenciarUsuario.cadastrarUsuario(nome, cpf, endereco, email, telefone, senha);
     }
 
     public static void gerarPedido() {
         if (usuarioLogado == null) {
-            System.out.println("Você precisa estar logado para realizar pedidos.");
+            System.out.println("\nVocê precisa estar logado para realizar pedidos.");
             return;
         }
 
@@ -219,37 +214,58 @@ public class Sistema {
                     System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
                     System.out.println("===============================");
 
-                    String confirmacaoPagamento = Console
-                            .lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
-                    if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
-                        System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
-                        // Caso afirmativo, gerar recibo
-                        String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
-                        gerarRecibo(pedido, caminhoArquivo);
-                        executarSistema();
+                    String confirmacaoPagamento = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
+                    
+                    try {
+                        if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
+                            System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
+                            // Caso afirmativo, gerar recibo
+                            usuarioLogado.adicionarPedido(pedido);
+                            usuarioLogado.listarHistoricoPedidos();
+
+                            String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
+                            gerarRecibo(pedido, caminhoArquivo);
+
+                            String caminhoHistorico = "historico_pedidos_" + usuarioLogado.getCpf() + ".txt";
+                            usuarioLogado.salvarHistoricoPedidos(caminhoHistorico);
+
+                        }       
+                    } catch (Exception e) {
+                        System.out.println("Pagamento não autorizado. Pedido cancelado!");
                     }
+                    continuar = false; // Sair do loop após finalizar pedido
                     break;
             }
         }
     }
 
-    public static void listarHistoricoPedidos() {
+    private static void listarPedidosRealizados() {
         if (usuarioLogado == null) {
-            System.out.println("Nenhum usuário logado.");
+            System.out.println("Você precisa estar logado para visualizar os pedidos realizados.");
             return;
         }
 
-        List<Pedidos> historico = usuarioLogado.getHistoricoPedidos();
-        if (historico.isEmpty()) {
-            System.out.println("Nenhum pedido realizado ainda.");
+        List<Pedidos> pedidos = usuarioLogado.getHistoricoPedidos();
+        if (pedidos.isEmpty()) {
+            System.out.println("Nenhum pedido realizado até o momento.");
         } else {
-            System.out.println("--- Histórico de Pedidos ---");
-            for (Pedidos pedido : historico) {
+            System.out.println("\n--- Pedidos Realizados ---");
+            for (Pedidos pedido : pedidos) {
                 System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
-                // Aqui você pode exibir informações adicionais do pedido se desejar
-                System.out.println("============================");
+                System.out.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
+                System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
+                System.out.println(); // linha em branco para separar os pedidos
             }
         }
+    }
+
+    private static void listarHistoricoPedidos() {
+        if (usuarioLogado == null) {
+            System.out.println("Você precisa estar logado para visualizar o histórico de pedidos.");
+            return;
+        }
+
+        usuarioLogado.listarHistoricoPedidos();
     }
 
     public static void gerarRecibo(Pedidos pedido, String caminhoArquivo) {
@@ -284,6 +300,7 @@ public class Sistema {
     }
 
     public static void main(String[] args) {
+        
         executarSistema();
     }
 }

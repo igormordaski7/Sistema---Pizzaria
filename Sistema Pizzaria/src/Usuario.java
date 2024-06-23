@@ -1,7 +1,9 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Usuario {
+public class Usuario implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String nome;
     private String cpf;
@@ -19,7 +21,6 @@ public class Usuario {
         this.telefone = telefone;
         this.senha = senha;
         this.historicoPedidos = new ArrayList<>();
-
     }
 
     public String getNome() {
@@ -70,20 +71,68 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public String toString() {
-        return "Nome: " + nome + "\n" +
-                "CPF: " + cpf + "\n" +
-                "Endereço: " + endereco + "\n" +
-                "Email: " + email + "\n" +
-                "Telefone: " + telefone + "\n" +
-                "Senha: " + senha;
+    public void setHistoricoPedidos(List<Pedidos> historicoPedidos) {
+        this.historicoPedidos = historicoPedidos;
+    }
+
+    public void adicionarPedido(Pedidos pedido) {
+        historicoPedidos.add(pedido);
     }
 
     public List<Pedidos> getHistoricoPedidos() {
         return historicoPedidos;
     }
 
-    public void adicionarPedidoHistorico(Pedidos pedido) {
-        historicoPedidos.add(pedido);
+    public void salvarHistoricoPedidos(String caminhoArquivo) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(caminhoArquivo))) {
+            for (Pedidos pedido : historicoPedidos) {
+                writer.println("Número do Pedido: " + pedido.getNumeroPedido());
+                writer.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
+                writer.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
+                writer.println(); // linha em branco para separar os pedidos
+            }
+            System.out.println("Histórico de pedidos salvo em " + caminhoArquivo);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar histórico de pedidos: " + e.getMessage());
+        }
+    }
+
+    public void carregarHistoricoPedidos(String cpf) {
+        String nomeArquivo = "historico_pedidos_" + cpf + ".txt";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("Preço Total:")) {
+                    // Extrair o preço do histórico de pedidos
+                    String precoString = line.substring(line.indexOf("R$") + 2).trim();
+
+                    // Substituir vírgula por ponto (caso necessário)
+                    precoString = precoString.replace(",", ".");
+
+                    // Converter para double
+                    double preco = Double.parseDouble(precoString);
+
+                    // Aqui você pode usar o preço como necessário no seu sistema
+                    System.out.println("Preço do pedido: " + preco);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao carregar histórico de pedidos: " + e.getMessage());
+        }
+    }
+
+    public void listarHistoricoPedidos() {
+        if (historicoPedidos.isEmpty()) {
+            System.out.println("Nenhum pedido realizado até o momento.");
+        } else {
+            System.out.println("\n--- Histórico de Pedidos ---");
+            for (Pedidos pedido : historicoPedidos) {
+                System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
+                System.out.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
+                System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
+                System.out.println(); // linha em branco para separar os pedidos
+            }
+        }
     }
 }
