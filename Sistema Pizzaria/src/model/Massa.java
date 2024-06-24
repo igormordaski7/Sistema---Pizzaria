@@ -1,9 +1,11 @@
+package model;
+
 public class Massa extends Ingredientes {
     private boolean essencial;
 
     public Massa(String nome, float preco, float tempPreparo) {
         super(nome, preco, tempPreparo);
-        this.essencial = true; // Atributo essencial com valor verdadeiro
+        this.essencial = true;
     }
 
     @Override

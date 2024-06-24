@@ -1,3 +1,5 @@
+package model;
+
 public class Bebidas {
     private String nome;
     private float preco;
@@ -7,7 +9,6 @@ public class Bebidas {
         this.preco = preco;
     }
 
-    // Métodos getter
     public String getNome() {
         return nome;
     }
@@ -16,7 +17,6 @@ public class Bebidas {
         return preco;
     }
 
-    // Criação dos objetos base de bebidas
     public static Bebidas b1 = new Bebidas("Coca 2L", 10.00f);
     public static Bebidas b2 = new Bebidas("Guarana antartica 2L", 10.00f);
     public static Bebidas b3 = new Bebidas("Fanta Laranja 2L", 10.00f);

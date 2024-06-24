@@ -1,3 +1,5 @@
+package view;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -25,7 +27,6 @@ public class Console {
 
             } finally {
 
-                // necessário limpar o buffer antes da proxima leitura:
                 leitor.nextLine();
             }
 
@@ -55,7 +56,6 @@ public class Console {
 
             } finally {
 
-                // necessário limpar o buffer antes da proxima leitura:
                 leitor.nextLine();
             }
 

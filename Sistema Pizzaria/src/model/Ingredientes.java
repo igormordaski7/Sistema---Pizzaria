@@ -1,3 +1,5 @@
+package model;
+
 public abstract class Ingredientes {
     private String nome;
     private float preco;
@@ -9,7 +11,6 @@ public abstract class Ingredientes {
         this.tempPreparo = tempPreparo;
     }
 
-    // Getters
     public String getNome() {
         return nome;
     }
