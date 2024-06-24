@@ -298,9 +298,4 @@ public class Sistema {
             System.err.println("Erro ao gerar recibo: " + e.getMessage());
         }
     }
-
-    public static void main(String[] args) {
-        
-        executarSistema();
-    }
 }
