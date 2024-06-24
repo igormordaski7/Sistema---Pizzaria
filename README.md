@@ -20,13 +20,28 @@ Este sistema de pizzaria permite gerenciar um cardápio de pizzas, onde é poss�
 
 ### Estrutura de Diretórios
 ```
-{{{{
-    
+> src
+  > controller
+    - GerenciarUsuario.java
+    - Metodos.java
+    - Sistema.java
+  > main
+    - Principal.java
+  > model
+    - Bebidas.java
+    - Ingredientes.java
+    - Massa.java
+    - Molho.java
+    - Pedidos.java
+    - Pizza.java
+    - Recheio.java
+    - RecheioDoce.java
+    - RecheioSalgado.java
+    - Usuario.java
+  > view
+    - Console.java
 
-AINDA NÃO ORGANIZAMOS A ESTRUTURA DE DIRETÓRIOS
-ASSIM QUE ESTIVER FEITO INCLUIREMOS NESTE ESPAÇO
 
-}}}}
 
 ### Classe Pizza
 A classe `Pizza` é responsável por representar uma pizza, contendo os seguintes atributos e métodos:
@@ -59,26 +74,16 @@ A classe `Sistema` gerencia o fluxo principal do programa e interações do usu�
 
 ## Como Executar
 
-1. **Compilar o código**:
-   ```sh
-   javac src/*.java -d out/
-   ```
-
-2. **Executar o programa**:
-   ```sh
-   java -cp out/ Principal
-   ```
-
-3. **Interagir com o sistema**:
+1. **Interagir com o sistema**:
    - No menu inicial, escolha entre realizar login, cadastrar usuário, exibir cardápio ou sair.
    - Após realizar login, você pode fazer pedidos, exibir cardápio, listar pedidos realizados, verificar histórico de pedidos ou sair.
 
 ## Pizzas Disponíveis
 O sistema possui um conjunto de pizzas pré-definidas. Cada pizza possui uma massa, molho e uma lista de recheios. A seguir, estão alguns exemplos de pizzas disponíveis:
 
-- **Calabresa Acebolada**: Massa m1, Molho m1, Recheios: calabresa, cebola, mussarela.
-- **Quatro Queijos**: Massa m1, Molho m1, Recheios: mussarela, cheddar, provolone, parmesão.
-- **Frango Crocante**: Massa m1, Molho m1, Recheios: frango, batata-palha.
+- **Calabresa Acebolada**: Massa Tradicional, Molho Tomate, Recheios: calabresa, cebola, mussarela.
+- **Quatro Queijos**: Massa Tradicional, Molho Tomate, Recheios: mussarela, cheddar, provolone, parmesão.
+- **Frango Crocante**: Massa Tradicional, Molho Tomate, Recheios: frango, batata-palha.
 
 Para uma lista completa das pizzas, consulte o código da classe `Pizza`.
 

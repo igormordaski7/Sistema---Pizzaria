@@ -1,6 +1,9 @@
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Usuario;
 
 public class GerenciarUsuario {
 
@@ -13,15 +16,16 @@ public class GerenciarUsuario {
     public Usuario realizarLogin(String cpf, String senha) {
         for (Usuario usuario : usuariosCadastrados) {
             if (usuario.getCpf().equals(cpf) && usuario.getSenha().equals(senha)) {
-                
+
                 return usuario;
 
             }
         }
-        return null; // Retorna null se não encontrar o usuário
+        return null;
     }
 
-    public void cadastrarUsuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
+    public void cadastrarUsuario(String nome, String cpf, String endereco, String email, String telefone,
+            String senha) {
         Usuario novoUsuario = new Usuario(nome, cpf, endereco, email, telefone, senha);
         usuariosCadastrados.add(novoUsuario);
         salvarUsuarios();

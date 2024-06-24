@@ -1,3 +1,5 @@
+package model;
+
 public class RecheioSalgado extends Recheio {
     public RecheioSalgado(String nome, float preco, float tempPreparo) {
         super(nome, preco, tempPreparo);

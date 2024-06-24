@@ -1,5 +1,17 @@
+
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Bebidas;
+import model.Ingredientes;
+import model.Massa;
+import model.Molho;
+import model.Pedidos;
+import model.Pizza;
+import model.Recheio;
+import model.RecheioDoce;
+import model.RecheioSalgado;
+import view.Console;
 
 public class Metodos {
 
@@ -68,15 +80,15 @@ public class Metodos {
                 pizza = Pizza.p20;
                 break;
             default:
-                return false; // Retorna falso se a escolha de pizza for inválida
+                return false;
         }
 
         if (pizza != null && tamanho >= 1 && tamanho <= 5) {
             pizza.setTamanho(tamanho);
-            pedido.adicionarPizza(pizza); // Adiciona a pizza ao pedido
-            return true; // Retorna verdadeiro se a pizza for adicionada com sucesso
+            pedido.adicionarPizza(pizza);
+            return true;
         } else {
-            return false; // Retorna falso se a pizza ou o tamanho forem inválidos
+            return false;
         }
     }
 
@@ -314,7 +326,6 @@ public class Metodos {
     }
 
     public static void customPizza(Pedidos pedido) {
-        // Seleção da massa
         System.out.println("Escolha a massa:");
         System.out.println("1. Tradicional");
         System.out.println("2. Doce");
@@ -337,7 +348,6 @@ public class Metodos {
                 return;
         }
 
-        // Seleção do molho
         System.out.println("Escolha o molho:");
         System.out.println("0. Sem Molho");
         System.out.println("1. Tomate");
@@ -372,10 +382,8 @@ public class Metodos {
                 return;
         }
 
-        // Criação da pizza
         Pizza customPizza = new Pizza("Personalizada", massa, molho);
 
-        // Seleção de recheios
         boolean adicionarMaisRecheios = true;
         while (adicionarMaisRecheios) {
             System.out.println("Escolha um recheio (1-52):");
@@ -554,7 +562,6 @@ public class Metodos {
             adicionarMaisRecheios = continuar == 1;
         }
 
-        // Definição do tamanho da pizza
         System.out.println("Escolha o tamanho da pizza (1 a 5):");
         int tamanhoEscolha = Console.lerInt();
         if (tamanhoEscolha >= 1 && tamanhoEscolha <= 5) {
@@ -564,7 +571,6 @@ public class Metodos {
             return;
         }
 
-        // Adiciona a pizza personalizada ao pedido
         pedido.adicionarPizza(customPizza);
         System.out.println("Pizza personalizada adicionada ao pedido com sucesso!");
     }

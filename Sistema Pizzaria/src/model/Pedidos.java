@@ -1,3 +1,5 @@
+package model;
+
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -18,9 +20,9 @@ public class Pedidos {
     }
 
     private int gerarNumeroPedido() {
-        // Gerar número de pedido aleatório de 3 dígitos
+
         Random random = new Random();
-        return random.nextInt(900) + 100; // Números de 100 a 999
+        return random.nextInt(900) + 100;
     }
 
     public void adicionarPizza(Pizza pizza) {
@@ -37,12 +39,10 @@ public class Pedidos {
     private void calcularPrecoTotal() {
         precoTotal = 0;
 
-        // Somar preços das bebidas
         for (Bebidas bebida : bebidas) {
             precoTotal += bebida.getPreco();
         }
 
-        // Somar preços das pizzas
         for (Pizza pizza : pizzas) {
             precoTotal += pizza.getPreco();
         }
@@ -51,7 +51,6 @@ public class Pedidos {
     private void calcularTempoPedido() {
         tempoPedido = 0;
 
-        // Encontrar o maior tempo de preparo entre as pizzas
         for (Pizza pizza : pizzas) {
             if (pizza.getTempPreparo() > tempoPedido) {
                 tempoPedido = pizza.getTempPreparo();

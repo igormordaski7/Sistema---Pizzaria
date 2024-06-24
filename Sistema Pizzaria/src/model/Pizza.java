@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +10,14 @@ public class Pizza {
     private List<Ingredientes> recheios;
     private float preco;
     private float tempPreparo;
-    private int tamanho; // Novo atributo para tamanho da pizza
+    private int tamanho;
 
     public Pizza(String nome, Ingredientes massa, Ingredientes molho) {
         this.nome = nome;
         this.massa = massa;
         this.molho = molho;
         this.recheios = new ArrayList<>();
-        this.tamanho = 1; // Valor inicial padrão para tamanho
+        this.tamanho = 1;
         calcular();
     }
 
@@ -84,14 +86,12 @@ public class Pizza {
             preco += multiplicador * recheio.getPreco();
         }
 
-        // Calcular tempo total de preparo da pizza
         tempPreparo = multiplicador * (massa.getTempPreparo() + molho.getTempPreparo());
         for (Ingredientes recheio : recheios) {
             tempPreparo += multiplicador * recheio.getTempPreparo();
         }
     }
 
-    // Declaração das pizzas estáticas
     public static Pizza p1;
     public static Pizza p2;
     public static Pizza p3;

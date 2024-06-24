@@ -1,7 +1,15 @@
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+
+import model.Bebidas;
+import model.Ingredientes;
+import model.Pedidos;
+import model.Pizza;
+import model.Usuario;
+import view.Console;
 
 public class Sistema {
 
@@ -29,7 +37,7 @@ public class Sistema {
     }
 
     private static void exibirMenuInicial() {
-        
+
         System.out.println("\n--- Sistema de Pizzaria ---");
         System.out.println("1. Realizar Login");
         System.out.println("2. Cadastrar Usuário");
@@ -100,7 +108,7 @@ public class Sistema {
         String senha = Console.lerString();
 
         Usuario usuarioEncontrado = gerenciarUsuario.realizarLogin(cpf, senha);
-        
+
         try {
             if (usuarioEncontrado != null) {
                 usuarioLogado = usuarioEncontrado;
@@ -182,7 +190,7 @@ public class Sistema {
                 case 4:
                     System.out.println("\n======= Dados do Pedido =======");
                     System.out.println("\nNumero do Pedido: " + pedido.getNumeroPedido());
-                    
+
                     List<Bebidas> bebidas = pedido.getBebidas();
                     if (!bebidas.isEmpty()) {
                         System.out.println("\nBebidas:");
@@ -214,26 +222,27 @@ public class Sistema {
                     System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
                     System.out.println("===============================");
 
-                    String confirmacaoPagamento = Console.lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
-                    
+                    String confirmacaoPagamento = Console
+                            .lerString("Deseja confirmar o pagamento? (Digite 'sim' para confirmar): ");
+
                     try {
                         if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
                             System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
-                            
+
                             usuarioLogado.adicionarPedido(pedido);
                             usuarioLogado.listarHistoricoPedidos();
 
-                            String caminhoArquivo = "recibo.txt"; 
+                            String caminhoArquivo = "recibo.txt";
                             gerarRecibo(pedido, caminhoArquivo);
 
                             String caminhoHistorico = "historico_pedidos_" + usuarioLogado.getCpf() + ".txt";
                             usuarioLogado.salvarHistoricoPedidos(caminhoHistorico);
 
-                        }       
+                        }
                     } catch (Exception e) {
                         System.out.println("Pagamento não autorizado. Pedido cancelado!");
                     }
-                    continuar = false; 
+                    continuar = false;
                     break;
             }
         }
@@ -254,7 +263,7 @@ public class Sistema {
                 System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
                 System.out.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
                 System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
-                System.out.println(); 
+                System.out.println();
             }
         }
     }

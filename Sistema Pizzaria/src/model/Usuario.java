@@ -1,3 +1,5 @@
+package model;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,12 +100,11 @@ public class Usuario implements Serializable {
                 }
                 writer.println("Preco Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
                 writer.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
-                writer.println("=========================================="); 
-                }
+                writer.println("==========================================");
+            }
 
             System.out.println("Pedido finalizado com sucesso! Disponivel para visualização no " + caminhoArquivo);
-        } 
-            catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Erro ao salvar histórico de pedidos: " + e.getMessage());
         }
     }
@@ -112,8 +113,8 @@ public class Usuario implements Serializable {
         String nomeArquivo = "historico_pedidos_" + nome + ".txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))) {
-         String line;
-         historicoPedidos.clear();
+            String line;
+            historicoPedidos.clear();
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("Preço Total:")) {
                     String precoString = line.substring(line.indexOf("R$") + 2).trim();
@@ -135,7 +136,7 @@ public class Usuario implements Serializable {
                 System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
                 System.out.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
                 System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
-                System.out.println(); 
+                System.out.println();
             }
         }
     }
