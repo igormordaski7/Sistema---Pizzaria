@@ -100,12 +100,15 @@ public class Sistema {
         String senha = Console.lerString();
 
         Usuario usuarioEncontrado = gerenciarUsuario.realizarLogin(cpf, senha);
-        if (usuarioEncontrado != null) {
-            usuarioLogado = usuarioEncontrado;
-            System.out.println("\nLogin realizado com sucesso.");
-            usuarioLogado.carregarHistoricoPedidos(cpf);
-        } else {
-            System.out.println("\nCPF ou senha incorretos. Tente novamente.");
+        
+        try {
+            if (usuarioEncontrado != null) {
+                usuarioLogado = usuarioEncontrado;
+                System.out.println("\nLogin realizado com sucesso.");
+                usuarioLogado.carregarHistoricoPedidos();
+            }
+        } catch (Exception e) {
+            System.out.println("\nCPF ou senha incorretos. Tente novamente." + e.getMessage());
         }
     }
 
@@ -178,9 +181,8 @@ public class Sistema {
                     break;
                 case 4:
                     System.out.println("\n======= Dados do Pedido =======");
-                    System.out.println("\nNúmero do Pedido: " + pedido.getNumeroPedido());
-
-                    // Mostrar bebidas, se houver
+                    System.out.println("\nNumero do Pedido: " + pedido.getNumeroPedido());
+                    
                     List<Bebidas> bebidas = pedido.getBebidas();
                     if (!bebidas.isEmpty()) {
                         System.out.println("\nBebidas:");
@@ -190,7 +192,6 @@ public class Sistema {
                         }
                     }
 
-                    // Mostrar pizzas, se houver
                     List<Pizza> pizzas = pedido.getPizzas();
                     if (!pizzas.isEmpty()) {
                         System.out.println("\nPizzas:");
@@ -208,7 +209,6 @@ public class Sistema {
                         }
                     }
 
-                    // Mostrar preço total do pedido
                     System.out.println("\n===============================");
                     System.out.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
                     System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
@@ -219,11 +219,11 @@ public class Sistema {
                     try {
                         if ("sim".equalsIgnoreCase(confirmacaoPagamento.trim())) {
                             System.out.println("\nPagamento realizado com sucesso! Recibo disponível.");
-                            // Caso afirmativo, gerar recibo
+                            
                             usuarioLogado.adicionarPedido(pedido);
                             usuarioLogado.listarHistoricoPedidos();
 
-                            String caminhoArquivo = "recibo.txt"; // Especificar o caminho desejado
+                            String caminhoArquivo = "recibo.txt"; 
                             gerarRecibo(pedido, caminhoArquivo);
 
                             String caminhoHistorico = "historico_pedidos_" + usuarioLogado.getCpf() + ".txt";
@@ -233,7 +233,7 @@ public class Sistema {
                     } catch (Exception e) {
                         System.out.println("Pagamento não autorizado. Pedido cancelado!");
                     }
-                    continuar = false; // Sair do loop após finalizar pedido
+                    continuar = false; 
                     break;
             }
         }
@@ -254,7 +254,7 @@ public class Sistema {
                 System.out.println("Número do Pedido: " + pedido.getNumeroPedido());
                 System.out.println("Preço Total: R$ " + String.format("%.2f", pedido.getPrecoTotal()));
                 System.out.println("Tempo de Preparo: " + pedido.getTempoPedido() + " minutos");
-                System.out.println(); // linha em branco para separar os pedidos
+                System.out.println(); 
             }
         }
     }
@@ -297,10 +297,5 @@ public class Sistema {
         } catch (IOException e) {
             System.err.println("Erro ao gerar recibo: " + e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        
-        executarSistema();
     }
 }

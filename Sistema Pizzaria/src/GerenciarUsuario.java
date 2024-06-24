@@ -13,7 +13,9 @@ public class GerenciarUsuario {
     public Usuario realizarLogin(String cpf, String senha) {
         for (Usuario usuario : usuariosCadastrados) {
             if (usuario.getCpf().equals(cpf) && usuario.getSenha().equals(senha)) {
+                
                 return usuario;
+
             }
         }
         return null; // Retorna null se não encontrar o usuário
